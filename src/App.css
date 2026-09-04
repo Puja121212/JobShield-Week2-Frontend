@@ -28,9 +28,9 @@ button {
 }
 
 
-/* =========================
+/* =====================================================
    NAVBAR
-========================= */
+===================================================== */
 
 .navbar {
   min-height: 76px;
@@ -149,9 +149,9 @@ button {
 }
 
 
-/* =========================
+/* =====================================================
    HERO
-========================= */
+===================================================== */
 
 .hero-section {
   padding: 90px 7%;
@@ -198,9 +198,9 @@ button {
 }
 
 
-/* =========================
+/* =====================================================
    SEARCH
-========================= */
+===================================================== */
 
 .search-box {
   margin-top: 32px;
@@ -244,9 +244,9 @@ button {
 }
 
 
-/* =========================
+/* =====================================================
    SAFETY CARD
-========================= */
+===================================================== */
 
 .hero-card {
   width: 350px;
@@ -297,9 +297,9 @@ button {
 }
 
 
-/* =========================
+/* =====================================================
    STATS
-========================= */
+===================================================== */
 
 .stats-section {
   padding: 38px 7%;
@@ -326,9 +326,9 @@ button {
 }
 
 
-/* =========================
+/* =====================================================
    COMMON SECTIONS
-========================= */
+===================================================== */
 
 .features-section,
 .jobs-section {
@@ -360,9 +360,9 @@ button {
 }
 
 
-/* =========================
+/* =====================================================
    FEATURES
-========================= */
+===================================================== */
 
 .feature-grid {
   display: grid;
@@ -405,9 +405,9 @@ button {
 }
 
 
-/* =========================
+/* =====================================================
    JOBS
-========================= */
+===================================================== */
 
 .jobs-section {
   background: #f1f5f9;
@@ -477,9 +477,9 @@ button {
 }
 
 
-/* =========================
+/* =====================================================
    FOOTER
-========================= */
+===================================================== */
 
 footer {
   padding: 45px 7%;
@@ -727,6 +727,157 @@ footer p {
 
 
 /* =====================================================
+   AUTH PAGES
+   LOGIN & SIGNUP
+===================================================== */
+
+.auth-page {
+  min-height: calc(100vh - 76px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #eff6ff, #f8fafc);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 40px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.10);
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-bottom: 22px;
+}
+
+.auth-logo h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #172033;
+}
+
+.auth-logo .logo-icon {
+  font-size: 30px;
+}
+
+.auth-card h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 30px;
+  color: #172033;
+}
+
+.auth-subtitle {
+  margin: 10px 0 28px;
+  text-align: center;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.auth-card form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 19px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-group input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #172033;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.auth-submit-btn {
+  width: 100%;
+  margin-top: 5px;
+  padding: 13px 18px;
+  border: none;
+  border-radius: 9px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  transition: background 0.2s ease,
+              transform 0.2s ease;
+}
+
+.auth-submit-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-error {
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.auth-switch {
+  margin-top: 23px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.auth-switch a {
+  color: #2563eb;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+
+/* =====================================================
    TABLET
 ===================================================== */
 
@@ -914,26 +1065,43 @@ footer p {
 
 
 /* =====================================================
-   SMALL MOBILE
+   AUTH MOBILE
 ===================================================== */
 
 @media (max-width: 600px) {
 
-  .navbar {
-    padding: 0 5%;
+  .auth-page {
+    min-height: calc(100vh - 70px);
+    padding: 40px 15px;
   }
 
-  .logo {
-    font-size: 20px;
+  .auth-card {
+    padding: 30px 22px;
+    border-radius: 15px;
   }
 
-  .logo-icon {
-    font-size: 23px;
+  .auth-logo h1 {
+    font-size: 25px;
   }
 
-  .menu-toggle {
-    width: 42px;
-    height: 42px;
+  .auth-logo .logo-icon {
+    font-size: 27px;
+  }
+
+  .auth-card h2 {
+    font-size: 25px;
+  }
+
+  .auth-subtitle {
+    font-size: 14px;
+  }
+
+  .form-group input {
+    padding: 12px;
+  }
+
+  .auth-submit-btn {
+    padding: 12px;
   }
 
 
@@ -1118,4 +1286,24 @@ footer p {
   .activity-content p {
     font-size: 13px;
   }
+
+
+  /* Auth */
+
+  .auth-page {
+    padding: 30px 12px;
+  }
+
+  .auth-card {
+    padding: 26px 18px;
+  }
+
+  .auth-card h2 {
+    font-size: 23px;
+  }
+
+  .auth-logo h1 {
+    font-size: 23px;
+  }
 }
+

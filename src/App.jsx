@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 import Home from './pages/Home'
 import Jobs from './pages/Jobs'
 import Dashboard from './pages/Dashboard'
@@ -21,7 +23,7 @@ function App() {
     <BrowserRouter>
       <div className="app">
 
-        {/* Navbar */}
+        {/* ================= NAVBAR ================= */}
         <header className="navbar">
 
           {/* Logo */}
@@ -30,27 +32,43 @@ function App() {
             <span>JobShield</span>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* ================= DESKTOP NAVIGATION ================= */}
           <nav className="desktop-nav">
-            <Link to="/">Home</Link>
-            <Link to="/jobs">Find Jobs</Link>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/how-it-works">How It Works</Link>
-            <Link to="/about">About</Link>
+            <Link to="/" onClick={closeMenu}>
+              Home
+            </Link>
+
+            <Link to="/jobs" onClick={closeMenu}>
+              Find Jobs
+            </Link>
+
+            <Link to="/dashboard" onClick={closeMenu}>
+              Dashboard
+            </Link>
+
+            <Link to="/how-it-works" onClick={closeMenu}>
+              How It Works
+            </Link>
+
+            <Link to="/about" onClick={closeMenu}>
+              About
+            </Link>
           </nav>
 
-          {/* Desktop Actions */}
+          {/* ================= DESKTOP ACTIONS ================= */}
           <div className="nav-actions desktop-actions">
-            <Link to="/dashboard" className="login-btn">
+
+            <Link to="/login" className="login-btn">
               Log In
             </Link>
 
-            <Link to="/dashboard" className="signup-btn">
+            <Link to="/signup" className="signup-btn">
               Get Started
             </Link>
+
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* ================= MOBILE MENU BUTTON ================= */}
           <button
             className="menu-toggle"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -60,7 +78,7 @@ function App() {
             {menuOpen ? '✕' : '☰'}
           </button>
 
-          {/* Mobile Navigation */}
+          {/* ================= MOBILE NAVIGATION ================= */}
           {menuOpen && (
             <div className="mobile-menu">
 
@@ -84,9 +102,11 @@ function App() {
                 About
               </Link>
 
+              {/* Mobile Actions */}
               <div className="mobile-menu-actions">
+
                 <Link
-                  to="/dashboard"
+                  to="/login"
                   className="login-btn"
                   onClick={closeMenu}
                 >
@@ -94,37 +114,53 @@ function App() {
                 </Link>
 
                 <Link
-                  to="/dashboard"
+                  to="/signup"
                   className="signup-btn"
                   onClick={closeMenu}
                 >
                   Get Started
                 </Link>
+
               </div>
 
             </div>
           )}
+
         </header>
 
-        {/* Pages */}
+        {/* ================= PAGES ================= */}
         <Routes>
+
+          {/* Authentication */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+
+          {/* Main Pages */}
           <Route path="/" element={<Home />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/job-details" element={<JobDetails />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/about" element={<About />} />
+
         </Routes>
 
-        {/* Footer */}
+        {/* ================= FOOTER ================= */}
         <footer id="about">
+
           <div className="logo">
             <span className="logo-icon">🛡️</span>
             <span>JobShield</span>
           </div>
 
-          <p>Helping job seekers find opportunities safely.</p>
-          <p>© 2026 JobShield. All rights reserved.</p>
+          <p>
+            Helping job seekers find opportunities safely.
+          </p>
+
+          <p>
+            © 2026 JobShield. All rights reserved.
+          </p>
+
         </footer>
 
       </div>
@@ -133,3 +169,4 @@ function App() {
 }
 
 export default App
+
