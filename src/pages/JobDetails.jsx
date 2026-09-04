@@ -1,52 +1,186 @@
 import { Link, useSearchParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function JobDetails() {
   const [searchParams] = useSearchParams()
+
+  const jobId = searchParams.get('id')
+
+  const [job, setJob] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const [applying, setApplying] = useState(false)
   const [applied, setApplied] = useState(false)
+  const [applicationMessage, setApplicationMessage] = useState('')
 
-  const jobId = Number(searchParams.get('id'))
+  // ==========================
+  // Fetch Job Details
+  // ==========================
+  useEffect(() => {
+    fetchJobDetails()
+  }, [jobId])
 
-  const jobs = [
-    {
-      id: 1,
-      title: 'Frontend Developer',
-      company: 'TechNova Solutions',
-      location: 'Remote',
-      type: 'Full-time',
-      safety: '92%',
-      description:
-        'Build responsive and user-friendly web interfaces using modern frontend technologies.',
-      skills: 'React.js • JavaScript • HTML5 • CSS3 • Git • REST APIs',
-    },
-    {
-      id: 2,
-      title: 'MERN Stack Developer',
-      company: 'Alpha Digital Labs',
-      location: 'Bangalore',
-      type: 'Full-time',
-      safety: '96%',
-      description:
-        'Develop full-stack web applications using MongoDB, Express, React and Node.js.',
-      skills: 'MongoDB • Express.js • React.js • Node.js • JavaScript • Git',
-    },
-    {
-      id: 3,
-      title: 'Junior Software Developer',
-      company: 'NextGen Technologies',
-      location: 'Remote',
-      type: 'Internship',
-      safety: '89%',
-      description:
-        'Work with the development team to build, test and improve web applications.',
-      skills: 'JavaScript • React • HTML • CSS • Git • REST APIs',
-    },
-  ]
+  const fetchJobDetails = async () => {
+    try {
+      setLoading(true)
+      setError('')
 
-  const job = jobs.find((item) => item.id === jobId) || jobs[0]
+      if (!jobId) {
+        throw new Error('Job ID is missing')
+      }
 
-  const handleApply = () => {
-    setApplied(true)
+      const response = await fetch(
+        `http://localhost:5000/api/jobs/${jobId}`
+      )
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to fetch job details')
+      }
+
+      setJob(data.job)
+    } catch (error) {
+      console.error('Fetch Job Details Error:', error)
+      setError(error.message || 'Unable to load job details')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // ==========================
+  // Apply for Job
+  // ==========================
+  const handleApply = async () => {
+    try {
+      const token = localStorage.getItem('token')
+
+      if (!token) {
+        setApplicationMessage(
+          'Please login first before applying for a job.'
+        )
+        return
+      }
+
+      setApplying(true)
+      setApplicationMessage('')
+
+      const response = await fetch(
+        'http://localhost:5000/api/applications',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            jobId: job._id,
+            coverLetter: '',
+          }),
+        }
+      )
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || 'Failed to submit application'
+        )
+      }
+
+      setApplied(true)
+      setApplicationMessage(
+        data.message || 'Application submitted successfully'
+      )
+    } catch (error) {
+      console.error('Apply Job Error:', error)
+
+      setApplicationMessage(
+        error.message || 'Unable to submit application'
+      )
+    } finally {
+      setApplying(false)
+    }
+  }
+
+  // ==========================
+  // Loading
+  // ==========================
+  if (loading) {
+    return (
+      <main>
+        <section className="features-section">
+          <div
+            style={{
+              maxWidth: '1000px',
+              margin: '0 auto',
+              textAlign: 'center',
+              padding: '60px 20px',
+            }}
+          >
+            <h2>Loading Job Details...</h2>
+
+            <p
+              style={{
+                marginTop: '10px',
+                color: '#64748b',
+              }}
+            >
+              Please wait while we fetch the job information.
+            </p>
+          </div>
+        </section>
+      </main>
+    )
+  }
+
+  // ==========================
+  // Error
+  // ==========================
+  if (error) {
+    return (
+      <main>
+        <section className="features-section">
+          <div
+            style={{
+              maxWidth: '1000px',
+              margin: '0 auto',
+              textAlign: 'center',
+              padding: '60px 20px',
+            }}
+          >
+            <h2>Unable to Load Job</h2>
+
+            <p
+              style={{
+                marginTop: '12px',
+                color: '#dc2626',
+              }}
+            >
+              {error}
+            </p>
+
+            <button
+              onClick={fetchJobDetails}
+              className="signup-btn"
+              style={{
+                marginTop: '20px',
+                border: 'none',
+                padding: '12px 24px',
+                cursor: 'pointer',
+              }}
+            >
+              Try Again
+            </button>
+          </div>
+        </section>
+      </main>
+    )
+  }
+
+  if (!job) {
+    return null
   }
 
   return (
@@ -58,7 +192,7 @@ function JobDetails() {
             margin: '0 auto',
           }}
         >
-          {/* Back to Jobs */}
+          {/* Back Button */}
           <Link
             to="/jobs"
             style={{
@@ -90,7 +224,7 @@ function JobDetails() {
             >
               <div>
                 <div className="company-logo">
-                  {job.company.charAt(0)}
+                  {job.company?.charAt(0)?.toUpperCase()}
                 </div>
 
                 <h1 style={{ marginTop: '20px' }}>
@@ -113,13 +247,15 @@ function JobDetails() {
                     color: '#64748b',
                   }}
                 >
-                  📍 {job.location} &nbsp; • &nbsp; 💼 {job.type}
+                  📍 {job.location}
+                  &nbsp; • &nbsp;
+                  💼 {job.jobType}
                 </p>
               </div>
 
               <div style={{ textAlign: 'right' }}>
                 <span className="safe-badge">
-                  {job.safety} Safe
+                  ✓ Verified
                 </span>
 
                 <p
@@ -134,19 +270,24 @@ function JobDetails() {
               </div>
             </div>
 
-            {/* Apply */}
+            {/* Apply Section */}
             <div style={{ marginTop: '30px' }}>
               {!applied ? (
                 <button
                   className="signup-btn"
                   onClick={handleApply}
+                  disabled={applying}
                   style={{
                     border: 'none',
                     padding: '13px 28px',
                     borderRadius: '9px',
+                    cursor: applying
+                      ? 'not-allowed'
+                      : 'pointer',
+                    opacity: applying ? 0.7 : 1,
                   }}
                 >
-                  Apply Now
+                  {applying ? 'Applying...' : 'Apply Now'}
                 </button>
               ) : (
                 <div
@@ -158,13 +299,68 @@ function JobDetails() {
                     fontWeight: '700',
                   }}
                 >
-                  ✓ Application submitted successfully!
+                  ✓ {applicationMessage}
+                </div>
+              )}
+
+              {/* Application Error / Login Message */}
+              {!applied && applicationMessage && (
+                <div
+                  style={{
+                    marginTop: '15px',
+                    padding: '14px 18px',
+                    background: '#fee2e2',
+                    color: '#b91c1c',
+                    borderRadius: '10px',
+                    fontWeight: '600',
+                  }}
+                >
+                  {applicationMessage}
                 </div>
               )}
             </div>
           </div>
 
-          {/* Safety Analysis */}
+          {/* Job Information */}
+          <div
+            style={{
+              marginTop: '25px',
+              padding: '30px',
+              background: 'white',
+              border: '1px solid #e2e8f0',
+              borderRadius: '18px',
+            }}
+          >
+            <h2>Job Information</h2>
+
+            <div
+              style={{
+                marginTop: '20px',
+                display: 'grid',
+                gridTemplateColumns:
+                  'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '15px',
+              }}
+            >
+              <div className="check-item">
+                💼 {job.jobType || 'Full-time'}
+              </div>
+
+              <div className="check-item">
+                📍 {job.location}
+              </div>
+
+              <div className="check-item">
+                💰 {job.salary || 'Not specified'}
+              </div>
+
+              <div className="check-item">
+                🎓 {job.experience || 'Fresher'}
+              </div>
+            </div>
+          </div>
+
+          {/* Job Safety Analysis */}
           <div
             style={{
               marginTop: '25px',
@@ -182,8 +378,8 @@ function JobDetails() {
                 color: '#64748b',
               }}
             >
-              Safety indicators help you review important information
-              before applying.
+              Safety indicators help you review important
+              information before applying.
             </p>
 
             <div style={{ marginTop: '25px' }}>
@@ -205,7 +401,7 @@ function JobDetails() {
             </div>
           </div>
 
-          {/* Description */}
+          {/* Job Description */}
           <div
             style={{
               marginTop: '25px',
@@ -231,15 +427,36 @@ function JobDetails() {
               Required Skills
             </h3>
 
-            <p
+            <div
               style={{
                 marginTop: '12px',
-                color: '#475569',
-                lineHeight: '1.8',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '10px',
               }}
             >
-              {job.skills}
-            </p>
+              {Array.isArray(job.skills) ? (
+                job.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      padding: '8px 14px',
+                      background: '#eff6ff',
+                      color: '#2563eb',
+                      borderRadius: '20px',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                    }}
+                  >
+                    {skill}
+                  </span>
+                ))
+              ) : (
+                <p style={{ color: '#475569' }}>
+                  {job.skills || 'Not specified'}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -248,3 +465,4 @@ function JobDetails() {
 }
 
 export default JobDetails
+

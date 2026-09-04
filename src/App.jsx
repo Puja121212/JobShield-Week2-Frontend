@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import JobDetails from './pages/JobDetails'
 import HowItWorks from './pages/HowItWorks'
 import About from './pages/About'
+import MyApplications from './pages/MyApplications'
 
 import './App.css'
 
@@ -44,6 +45,10 @@ function App() {
 
             <Link to="/dashboard" onClick={closeMenu}>
               Dashboard
+            </Link>
+
+            <Link to="/my-applications" onClick={closeMenu}>
+              My Applications
             </Link>
 
             <Link to="/how-it-works" onClick={closeMenu}>
@@ -94,6 +99,10 @@ function App() {
                 Dashboard
               </Link>
 
+              <Link to="/my-applications" onClick={closeMenu}>
+                My Applications
+              </Link>
+
               <Link to="/how-it-works" onClick={closeMenu}>
                 How It Works
               </Link>
@@ -142,6 +151,12 @@ function App() {
           <Route path="/job-details" element={<JobDetails />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/about" element={<About />} />
+
+          {/* Applications */}
+          <Route
+            path="/my-applications"
+            element={<MyApplications />}
+          />
 
         </Routes>
 
