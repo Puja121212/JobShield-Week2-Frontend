@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 function JobDetails() {
   const [searchParams] = useSearchParams()
@@ -14,14 +14,7 @@ function JobDetails() {
   const [applied, setApplied] = useState(false)
   const [applicationMessage, setApplicationMessage] = useState('')
 
-  // ==========================
-  // Fetch Job Details
-  // ==========================
-  useEffect(() => {
-    fetchJobDetails()
-  }, [jobId])
-
-  const fetchJobDetails = async () => {
+  const fetchJobDetails = useCallback(async () => {
     try {
       setLoading(true)
       setError('')
@@ -47,7 +40,14 @@ function JobDetails() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [jobId])
+
+  // ==========================
+  // Fetch Job Details
+  // ==========================
+  useEffect(() => {
+    fetchJobDetails()
+  }, [fetchJobDetails])
 
   // ==========================
   // Apply for Job
